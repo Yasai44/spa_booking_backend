@@ -1,6 +1,6 @@
 --Users TABLE
 CREATE TABLE Users (
-    id UUID PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -8,28 +8,31 @@ CREATE TABLE Users (
 );
 
 -- SERVICES TABLE
-CREAT TABLE Services (
-    id UUID PRIMARY KEY,
+CREATE TABLE Services (
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    duration INT NOT NULL
+    duration INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL
 );
 
 --BOOKINGS TABLE
-CREATE TABLE BOOKINGS (
-    id UUID PRIMARY KEY,
-    userId UUID NULL,
+CREATE TABLE Bookings (
+    id SERIAL PRIMARY KEY,
+    userId INT NULL,
     guestName VARCHAR(100) NULL,
     guestEmail VARCHAR(150) NULL,
-    serviceId UUID NOT NULL,
+    serviceId INT NOT NULL,
     date DATE NOT NULL,
     time VARCHAR(20) NOT NULL,
-    status VARCHAR(20) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    createdAt TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY (userId) REFERENCES Users(id),
     FOREIGN KEY (serviceId) REFERENCES Services(id)
 );
 
+
 --SSED SPA SERVICES
-INSERT INTO Services (id, name, duration) VALUES
-    (gen_random_uuid(), 'Massage', 60),
-    (gen_random_uuid(), 'Facial', 45),
-    (gen_random_uuid(), 'Hot Stone Therapy', 90);
+INSERT INTO Services (name, duration, price) VALUES
+    ('Massage', 60, 80.00),
+    ('Facial', 45, 65.00),
+    ('Hot Stone Therapy', 90, 120.00);
