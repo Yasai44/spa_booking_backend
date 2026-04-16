@@ -44,4 +44,13 @@ export class BookingRepository {
             data: { status: "cancelled" }
         });
     }
+
+    async existsConflict(serviceId: number, date: string, time: string): Promise<boolean> {
+        const existing = await prisma.booking.findFirst({
+            where: { serviceId, date, time }
+        });
+
+        return !!existing;
+    }
+
 }

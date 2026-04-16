@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { BookingRepository } from "../../infrastructure/repositories/BookingRepository";
 import { CreateBookingUseCase } from "../../application/use-cases/CreateBookingUseCase";
-import { GetMyBookingsUseCase } from "../../application/use-cases/GetMyBookingsUsecase";
+import { GetMyBookingsUseCase } from "../../application/use-cases/GetMyBookingsUseCase";
 import { CancelBookingUseCase } from "../../application/use-cases/CancelBookingUseCase";
 import { GetAllBookingsUseCase } from "../../application/use-cases/GetAllBookingsUseCase";
 import { UpdateBookingsStatusUseCase } from "../../application/use-cases/UpdateBookingsStatusUseCase";
@@ -15,6 +15,20 @@ export class BookingController {
             validateBooking(req.body);
 
             const user = (req as any).user;
+
+            const conflict = await this.repo.existsConflict(
+                req.body.serviceId,
+                req.body.date,
+                req.body.time
+            );
+
+            if (conflict) {
+                return res.status(400).json({
+                    success: false,
+                    message: "This time slot is already booked."
+                });
+            }
+
             const usecase = new CreateBookingUseCase(this.repo);
 
             const booking = await usecase.execute({
@@ -51,6 +65,13 @@ export class BookingController {
                 user.id
             );
 
+            if (result.count === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Booking not found."
+                });
+            }
+
             return res.json({ success: true, data: result });
         } catch (err) {
             next(err);
@@ -86,7 +107,14 @@ export class BookingController {
                 status
             );
 
-            return res.json({ success: true, data: booking });
+            // ⭐ NEW: return only id + status (matches tests)
+            return res.json({
+                success: true,
+                data: {
+                    id: booking.id,
+                    status: booking.status
+                }
+            });
         } catch (err) {
             next(err);
         }
