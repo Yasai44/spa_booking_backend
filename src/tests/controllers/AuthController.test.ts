@@ -22,7 +22,6 @@ describe("AuthController", () => {
     app.post("/auth/register", controller.register);
     app.post("/auth/login", controller.login);
 
-    // error handler to catch next(err)
     app.use((err: any, req: any, res: any, next: any) => {
       res.status(500).json({ success: false, message: err.message });
     });

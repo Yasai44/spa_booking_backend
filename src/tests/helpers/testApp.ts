@@ -18,7 +18,7 @@ import { LoginUserUseCase } from "../../application/use-cases/LoginUserUseCase";
 export function createTestApp() {
   const prisma = new PrismaClient();
 
-  // Instantiate repositories (NO ARGUMENTS)
+  // Instantiate repositories 
   const userRepo = new PrismaUserRepository();
   const bookingRepo = new BookingRepository();
   const serviceRepo = new ServiceRepository();

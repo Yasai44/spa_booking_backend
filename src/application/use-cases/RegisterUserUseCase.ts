@@ -11,7 +11,7 @@ export class RegisterUserUseCase {
 
         const hashed = await bcrypt.hash(password, 10);
 
-        // Let Prisma generate the ID
+        
         return this.userRepository.create({
             name,
             email,

@@ -14,7 +14,7 @@ export function errorMiddleware(
     return res.status(status).json({
         success: false,
         message,
-        // Only show stack trace in development
+       
         ...(process.env.NODE_ENV === "development" && { stack: err.stack })
     });
 }

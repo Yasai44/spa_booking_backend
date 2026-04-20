@@ -107,7 +107,6 @@ export class BookingController {
                 status
             );
 
-            // ⭐ NEW: return only id + status (matches tests)
             return res.json({
                 success: true,
                 data: {

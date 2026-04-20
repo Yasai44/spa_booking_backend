@@ -18,7 +18,6 @@ describe("Booking Error Integration", () => {
   it("fails to create booking with missing fields", async () => {
     const res = await request(app).post("/bookings").send({
       serviceId
-      // missing date + time
     });
 
     expect(res.status).toBe(400);

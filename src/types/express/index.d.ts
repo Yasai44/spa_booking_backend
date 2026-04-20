@@ -1,4 +1,4 @@
-import { User } from "../../domain/entities/User"; // or whatever your User type is
+import { User } from "../../domain/entities/User"; 
 
 declare global {
   namespace Express {

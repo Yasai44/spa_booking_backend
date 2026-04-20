@@ -20,7 +20,7 @@ describe("BookingController", () => {
     controller = new BookingController(mockRepo);
 
     req = { body: {}, params: {} };
-    req.user = { id: 1 }; // ⭐ MUST be assigned after object creation
+    req.user = { id: 1 }; 
 
     res = {
       status: jest.fn().mockReturnThis(),
