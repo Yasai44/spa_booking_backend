@@ -53,7 +53,7 @@ describe("BookingController", () => {
     mockRepo.existsConflict.mockResolvedValue(false);
     mockRepo.create.mockResolvedValue(booking);
 
-    await controller.create(req, res, next);
+    await controller.create(req, res);
 
     expect(mockRepo.existsConflict).toHaveBeenCalledWith(2, "2026-05-01", "10:00");
     expect(mockRepo.create).toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe("BookingController", () => {
 
     mockRepo.existsConflict.mockResolvedValue(true);
 
-    await controller.create(req, res, next);
+    await controller.create(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
@@ -106,7 +106,7 @@ describe("BookingController", () => {
 
     mockRepo.getByUser.mockResolvedValue(bookings);
 
-    await controller.getMine(req, res, next);
+    await controller.getMine(req, res);
 
     expect(mockRepo.getByUser).toHaveBeenCalledWith(1);
     expect(res.json).toHaveBeenCalledWith({
@@ -146,7 +146,7 @@ describe("BookingController", () => {
 
     mockRepo.getAll.mockResolvedValue(bookings);
 
-    await controller.getAll(req, res, next);
+    await controller.getAll(req, res);
 
     expect(mockRepo.getAll).toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith({
@@ -162,7 +162,7 @@ describe("BookingController", () => {
     req.params.id = "1";
     mockRepo.cancel.mockResolvedValue({ count: 1 });
 
-    await controller.cancel(req, res, next);
+    await controller.cancel(req, res);
 
     expect(mockRepo.cancel).toHaveBeenCalledWith(1, 1);
     expect(res.json).toHaveBeenCalledWith({
@@ -175,7 +175,7 @@ describe("BookingController", () => {
     req.params.id = "1";
     mockRepo.cancel.mockResolvedValue({ count: 0 });
 
-    await controller.cancel(req, res, next);
+    await controller.cancel(req, res);
 
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({
@@ -196,7 +196,7 @@ describe("BookingController", () => {
       status: "approved"
     });
 
-    await controller.updateStatus(req, res, next);
+    await controller.updateStatus(req, res);
 
     expect(mockRepo.updateStatus).toHaveBeenCalledWith(1, "approved");
     expect(res.json).toHaveBeenCalledWith({
@@ -204,4 +204,18 @@ describe("BookingController", () => {
       data: { id: 1, status: "approved" }
     });
   });
+
+  it("should return 400 for invalid status", async () => {
+  req.params.id = "1";
+  req.body.status = "INVALID";
+
+  await controller.updateStatus(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(400);
+  expect(res.json).toHaveBeenCalledWith({
+    success: false,
+    message: "Invalid booking status"
+  });
+});
+
 });
